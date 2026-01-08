@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
               onClick={(e) => handleScroll(e, '#home')} 
               className="flex items-center focus:outline-none"
             >
-              <img src="/wisal_logo.png" alt="وِصال" className="h-12 w-auto object-contain" />
+              <img src="wisal_logo.png" alt="وِصال" className="h-12 w-auto object-contain" />
             </a>
           </div>
 

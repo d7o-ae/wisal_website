@@ -26,7 +26,7 @@ const Screenshots: React.FC = () => {
             {/* Dashboard Screenshot */}
             <div className="bg-gray-50 aspect-video w-full flex items-center justify-center relative group">
                <img 
-                 src="/dashboard.png" 
+                 src="dashboard.png" 
                  alt="لوحة تحكم وِصال" 
                  className="w-full h-full object-cover"
                />
@@ -43,7 +43,7 @@ const Screenshots: React.FC = () => {
             <div className="bg-white rounded-[2rem] overflow-hidden aspect-[9/19.5] relative group">
                 {/* Mobile App Screenshot */}
                 <img 
-                 src="/mobile.png" 
+                 src="mobile.png" 
                  alt="تطبيق وِصال" 
                  className="w-full h-full object-cover"
                />
