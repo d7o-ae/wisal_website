@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Section from './Section';
+import PrivacyPolicy from './PrivacyPolicy';
+import TermsOfUse from './TermsOfUse';
 
 const AboutAndFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
 
   const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -42,8 +46,22 @@ const AboutAndFooter: React.FC = () => {
             <div>
               <h4 className="font-bold text-wisal-primary mb-4">قانوني</h4>
               <ul className="space-y-2 text-sm text-wisal-secondary">
-                <li><a href="#" className="hover:text-wisal-rose transition-colors">سياسة الخصوصية</a></li>
-                <li><a href="#" className="hover:text-wisal-rose transition-colors">شروط الاستخدام</a></li>
+                <li>
+                  <button 
+                    onClick={() => setIsPrivacyOpen(true)} 
+                    className="hover:text-wisal-rose transition-colors text-right"
+                  >
+                    سياسة الخصوصية
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => setIsTermsOpen(true)} 
+                    className="hover:text-wisal-rose transition-colors text-right"
+                  >
+                    شروط الاستخدام
+                  </button>
+                </li>
                 <li><a href="#" className="hover:text-wisal-rose transition-colors">تواصل معنا</a></li>
               </ul>
             </div>
@@ -54,6 +72,9 @@ const AboutAndFooter: React.FC = () => {
           </div>
         </div>
       </Section>
+
+      <PrivacyPolicy isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+      <TermsOfUse isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
     </>
   );
 };
