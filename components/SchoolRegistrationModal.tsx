@@ -66,9 +66,23 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
   if (!isOpen) return null;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    
+    // Validate phone number: digits only, max 11 digits
+    if (name === 'phone') {
+      const digitsOnly = value.replace(/\D/g, '');
+      if (digitsOnly.length <= 11) {
+        setFormData({
+          ...formData,
+          [name]: digitsOnly,
+        });
+      }
+      return;
+    }
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
@@ -81,13 +95,29 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
   };
 
   const validateStep1 = () => {
-    return (
-      formData.schoolName.trim() !== '' &&
-      formData.responsiblePersonName.trim() !== '' &&
-      formData.responsiblePersonRole !== '' &&
-      formData.email.trim() !== '' &&
-      formData.phone.trim() !== ''
-    );
+    // Check required fields
+    if (
+      formData.schoolName.trim() === '' ||
+      formData.responsiblePersonName.trim() === '' ||
+      formData.responsiblePersonRole === '' ||
+      formData.email.trim() === '' ||
+      formData.phone.trim() === ''
+    ) {
+      return false;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return false;
+    }
+    
+    // Validate phone number (must be digits only, between 7-11 digits)
+    if (!/^\d{7,11}$/.test(formData.phone)) {
+      return false;
+    }
+    
+    return true;
   };
 
   const validateStep2 = () => {
@@ -302,7 +332,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-2xl w-full my-8 relative">
+      <div className="bg-white rounded-3xl max-w-2xl w-full my-8 relative" style={{ fontFamily: '"Rubik", "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", system-ui, -apple-system, sans-serif' }}>
         <button
           onClick={handleClose}
           className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-3xl font-light z-10"
@@ -352,7 +382,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                 />
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="responsiblePersonName">
                     اسم الشخص المسؤول <span className="text-red-500">*</span>
@@ -390,7 +420,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="email">
                     البريد الإلكتروني الرسمي <span className="text-red-500">*</span>
@@ -402,9 +432,11 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     value={formData.email}
                     onChange={handleInputChange}
                     required
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary"
                     placeholder="example@school.com"
                     dir="ltr"
+                    title="يرجى إدخال بريد إلكتروني صحيح"
                   />
                 </div>
                 <div className="flex-1">
@@ -428,16 +460,15 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="phone">
                   رقم الهاتف / واتساب <span className="text-red-500">*</span>
                 </label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <select
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleInputChange}
-                    className="w-32 px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
-                    style={{ fontFamily: '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", system-ui, -apple-system, sans-serif' }}
+                    className="w-full sm:w-32 px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
                   >
                     {countryCodes.map((country) => (
-                      <option key={country.code} value={country.code} style={{ fontFamily: '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", system-ui, sans-serif' }}>
+                      <option key={country.code} value={country.code}>
                         {country.flag} {country.code}
                       </option>
                     ))}
@@ -449,9 +480,12 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
+                    pattern="\d{7,11}"
+                    maxLength={11}
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary"
                     placeholder="5X XXX XXXX"
                     dir="ltr"
+                    title="يرجى إدخال رقم هاتف صحيح (7-11 أرقام)"
                   />
                 </div>
               </div>
@@ -463,7 +497,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
             <div className="space-y-5 animate-fadeIn">
               <h3 className="text-xl font-bold text-wisal-primary mb-4">الموقع والتفاصيل</h3>
               
-              <div className="flex gap-4">
+              <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="country">
                     الدولة <span className="text-red-500">*</span>
@@ -475,11 +509,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     onChange={handleInputChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
-                    style={{ fontFamily: '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", system-ui, -apple-system, sans-serif' }}
                   >
                     <option value="">اختر الدولة</option>
                     {countries.map((country) => (
-                      <option key={country.value} value={country.value} style={{ fontFamily: '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", system-ui, sans-serif' }}>
+                      <option key={country.value} value={country.value}>
                         {country.label}
                       </option>
                     ))}

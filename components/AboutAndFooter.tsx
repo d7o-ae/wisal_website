@@ -27,7 +27,7 @@ const AboutAndFooter: React.FC = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                 <img src="wisal_logo.png" alt="وِصال" className="h-10 w-auto object-contain" />
+                 <img src="logo_footer.png" alt="وِصال" className="h-16 w-auto object-contain" />
               </div>
               <p className="text-sm text-wisal-muted max-w-xs">
                 منصة التواصل المدرسي التي تجمع بين البساطة والفعالية.
