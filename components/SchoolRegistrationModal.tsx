@@ -22,6 +22,7 @@ interface FormData {
   schoolLicense: File | null;
   preferredOption: string;
   preferredContactMethod: string;
+  hearAboutUs: string;
 }
 
 const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpen, onClose }) => {
@@ -41,6 +42,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     schoolLicense: null,
     preferredOption: '',
     preferredContactMethod: '',
+    hearAboutUs: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -133,7 +135,8 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
   const validateStep3 = () => {
     return (
       formData.preferredOption !== '' &&
-      formData.preferredContactMethod !== ''
+      formData.preferredContactMethod !== '' &&
+      formData.hearAboutUs !== ''
     );
   };
 
@@ -181,6 +184,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
         studentsCount: formData.studentsCount,
         preferredOption: formData.preferredOption,
         preferredContactMethod: formData.preferredContactMethod,
+        hearAboutUs: formData.hearAboutUs,
         // Add file names if files are selected
         commercialRecordFileName: formData.commercialRecord?.name || '',
         schoolLicenseFileName: formData.schoolLicense?.name || '',
@@ -240,6 +244,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
       schoolLicense: null,
       preferredOption: '',
       preferredContactMethod: '',
+      hearAboutUs: '',
     });
     setSubmitted(false);
     onClose();
@@ -295,6 +300,16 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     { value: 'call', label: '📞 اتصال هاتفي' },
     { value: 'email', label: '📧 بريد إلكتروني' },
     { value: 'whatsapp', label: '💬 واتساب' },
+  ];
+
+  const hearAboutUsOptions = [
+    { value: 'search', label: 'محركات البحث (جوجل، بينج)' },
+    { value: 'social', label: 'وسائل التواصل الاجتماعي' },
+    { value: 'friend', label: 'صديق أو زميل' },
+    { value: 'conference', label: 'مؤتمر أو معرض تعليمي' },
+    { value: 'advertisement', label: 'إعلان' },
+    { value: 'email-campaign', label: 'رسالة بريد إلكتروني' },
+    { value: 'other', label: 'أخرى' },
   ];
 
   if (submitted) {
@@ -643,6 +658,27 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     </label>
                   ))}
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-700 font-medium mb-2" htmlFor="hearAboutUs">
+                  كيف سمعت عن وِصال؟ <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="hearAboutUs"
+                  name="hearAboutUs"
+                  value={formData.hearAboutUs}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
+                >
+                  <option value="">اختر الإجابة</option>
+                  {hearAboutUsOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Privacy Notice */}
