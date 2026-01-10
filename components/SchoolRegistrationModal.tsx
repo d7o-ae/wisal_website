@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../src/firebase/config';
 
 interface SchoolRegistrationModalProps {
   isOpen: boolean;
@@ -42,6 +44,24 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Test Firebase connection on mount
+  useEffect(() => {
+    if (isOpen) {
+      console.log('🔵 Modal opened - Testing Firebase connection...');
+      console.log('🔵 Firestore DB object:', db);
+      console.log('🔵 DB app name:', db.app.name);
+      console.log('🔵 DB type:', db.type);
+      
+      if (!db) {
+        console.error('❌ Firestore DB is not initialized!');
+      } else {
+        console.log('✅ Firebase connection looks good');
+      }
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -110,11 +130,67 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      console.log('🔵 Starting form submission...');
+      
+      // Prepare data for Firestore (excluding files for now)
+      const requestData = {
+        schoolName: formData.schoolName,
+        responsiblePersonName: formData.responsiblePersonName,
+        responsiblePersonRole: formData.responsiblePersonRole,
+        email: formData.email,
+        websiteUrl: formData.websiteUrl || '',
+        phone: `${formData.countryCode} ${formData.phone}`,
+        country: formData.country,
+        city: formData.city,
+        studentsCount: formData.studentsCount,
+        preferredOption: formData.preferredOption,
+        preferredContactMethod: formData.preferredContactMethod,
+        // Add file names if files are selected
+        commercialRecordFileName: formData.commercialRecord?.name || '',
+        schoolLicenseFileName: formData.schoolLicense?.name || '',
+        status: 'pending',
+        createdAt: serverTimestamp(),
+      };
+
+      console.log('🔵 Request data prepared:', requestData);
+      console.log('🔵 Attempting to add document to Firestore...');
+
+      // Add document to Firestore 'requests' collection
+      const docRef = await addDoc(collection(db, 'requests'), requestData);
+      
+      console.log('✅ Document written successfully with ID:', docRef.id);
+      
+      setSubmitted(true);
+    } catch (error: any) {
+      console.error('❌ Error adding document:', error);
+      console.error('❌ Error code:', error?.code);
+      console.error('❌ Error message:', error?.message);
+      console.error('❌ Full error:', JSON.stringify(error, null, 2));
+      
+      // More specific error messages
+      let errorMessage = 'حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.';
+      
+      if (error?.code === 'permission-denied') {
+        errorMessage = 'خطأ في الصلاحيات. يرجى التواصل مع الدعم الفني.';
+        console.error('❌ FIRESTORE PERMISSION DENIED - Check Firebase rules');
+      } else if (error?.code === 'unavailable') {
+        errorMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+        console.error('❌ FIRESTORE UNAVAILABLE - Check internet connection');
+      } else if (error?.message?.includes('Firebase')) {
+        errorMessage = 'خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من الإعدادات.';
+        console.error('❌ FIREBASE CONFIG ERROR - Check firebase config');
+      }
+      
+      setSubmitError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -547,6 +623,13 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   <span>سيتم التواصل خلال يوم عمل واحد</span>
                 </p>
               </div>
+
+              {/* Error Message */}
+              {submitError && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 mt-4 text-red-600">
+                  {submitError}
+                </div>
+              )}
             </div>
           )}
 
@@ -556,7 +639,8 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
               <button
                 type="button"
                 onClick={handlePrev}
-                className="flex-1 px-6 py-3 border-2 border-wisal-primary text-wisal-primary rounded-xl font-bold hover:bg-gray-50 transition-colors"
+                disabled={isSubmitting}
+                className="flex-1 px-6 py-3 border-2 border-wisal-primary text-wisal-primary rounded-xl font-bold hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
                 السابق
               </button>
@@ -578,14 +662,14 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
             ) : (
               <button
                 type="submit"
-                disabled={!isStepValid(currentStep)}
+                disabled={!isStepValid(currentStep) || isSubmitting}
                 className={`flex-1 px-6 py-3 rounded-xl font-bold transition-colors ${
-                  isStepValid(currentStep)
+                  isStepValid(currentStep) && !isSubmitting
                     ? 'bg-wisal-primary text-white hover:bg-opacity-90 cursor-pointer'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                سجل الآن
+                {isSubmitting ? 'جاري الإرسال...' : 'سجل الآن'}
               </button>
             )}
           </div>
