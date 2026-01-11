@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../src/firebase/config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../src/firebase/config';
 
 interface SchoolRegistrationModalProps {
   isOpen: boolean;
@@ -48,6 +49,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [fileErrors, setFileErrors] = useState<{
+    commercialRecord?: string;
+    schoolLicense?: string;
+  }>({});
 
   // Test Firebase connection on mount
   useEffect(() => {
@@ -90,10 +95,33 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
-    setFormData({
-      ...formData,
-      [e.target.name]: file,
-    });
+    const fieldName = e.target.name as 'commercialRecord' | 'schoolLicense';
+    
+    // Check file size (500 KB = 500 * 1024 bytes = 512000 bytes)
+    const MAX_FILE_SIZE = 500 * 1024; // 500 KB in bytes
+    
+    if (file && file.size > MAX_FILE_SIZE) {
+      setFileErrors({
+        ...fileErrors,
+        [fieldName]: `حجم الملف كبير جداً. الحد الأقصى هو 500 كيلوبايت (الملف الحالي: ${Math.round(file.size / 1024)} كيلوبايت)`,
+      });
+      // Clear the file input
+      e.target.value = '';
+      setFormData({
+        ...formData,
+        [fieldName]: null,
+      });
+    } else {
+      // Clear any previous error for this field
+      setFileErrors({
+        ...fileErrors,
+        [fieldName]: undefined,
+      });
+      setFormData({
+        ...formData,
+        [fieldName]: file,
+      });
+    }
   };
 
   const validateStep1 = () => {
@@ -171,7 +199,31 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     try {
       console.log('🔵 Starting form submission...');
       
-      // Prepare data for Firestore (excluding files for now)
+      let commercialRecordURL = '';
+      let schoolLicenseURL = '';
+      
+      // Upload files to Firebase Storage
+      if (formData.commercialRecord) {
+        console.log('📤 Uploading commercial record...');
+        const timestamp = Date.now();
+        const fileName = `${timestamp}_${formData.commercialRecord.name}`;
+        const storageRef = ref(storage, `requests/${fileName}`);
+        await uploadBytes(storageRef, formData.commercialRecord);
+        commercialRecordURL = await getDownloadURL(storageRef);
+        console.log('✅ Commercial record uploaded:', commercialRecordURL);
+      }
+      
+      if (formData.schoolLicense) {
+        console.log('📤 Uploading school license...');
+        const timestamp = Date.now();
+        const fileName = `${timestamp}_${formData.schoolLicense.name}`;
+        const storageRef = ref(storage, `requests/${fileName}`);
+        await uploadBytes(storageRef, formData.schoolLicense);
+        schoolLicenseURL = await getDownloadURL(storageRef);
+        console.log('✅ School license uploaded:', schoolLicenseURL);
+      }
+      
+      // Prepare data for Firestore with file URLs
       const requestData = {
         schoolName: formData.schoolName,
         responsiblePersonName: formData.responsiblePersonName,
@@ -185,9 +237,11 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
         preferredOption: formData.preferredOption,
         preferredContactMethod: formData.preferredContactMethod,
         hearAboutUs: formData.hearAboutUs,
-        // Add file names if files are selected
+        // Add file URLs and names
         commercialRecordFileName: formData.commercialRecord?.name || '',
+        commercialRecordURL: commercialRecordURL,
         schoolLicenseFileName: formData.schoolLicense?.name || '',
+        schoolLicenseURL: schoolLicenseURL,
         status: 'pending',
         createdAt: serverTimestamp(),
       };
@@ -584,7 +638,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   accept=".pdf,.jpg,.jpeg,.png"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right file:ml-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-wisal-primary file:text-white hover:file:bg-opacity-90"
                 />
-                <p className="text-sm text-gray-500 mt-1">PDF, JPG, PNG (حد أقصى 5MB)</p>
+                <p className="text-sm text-gray-500 mt-1">PDF, JPG, PNG (حد أقصى 500 كيلوبايت)</p>
+                {fileErrors.commercialRecord && (
+                  <p className="text-sm text-red-500 mt-1 font-medium">⚠️ {fileErrors.commercialRecord}</p>
+                )}
               </div>
 
               <div>
@@ -600,7 +657,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   accept=".pdf,.jpg,.jpeg,.png"
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right file:ml-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-wisal-primary file:text-white hover:file:bg-opacity-90"
                 />
-                <p className="text-sm text-gray-500 mt-1">PDF, JPG, PNG (حد أقصى 5MB)</p>
+                <p className="text-sm text-gray-500 mt-1">PDF, JPG, PNG (حد أقصى 500 كيلوبايت)</p>
+                {fileErrors.schoolLicense && (
+                  <p className="text-sm text-red-500 mt-1 font-medium">⚠️ {fileErrors.schoolLicense}</p>
+                )}
               </div>
             </div>
           )}
