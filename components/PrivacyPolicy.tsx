@@ -153,8 +153,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
               إذا كان لديك أي استفسارات أو مخاوف بشأن سياسة الخصوصية هذه، يرجى التواصل معنا:
             </p>
             <div className="bg-wisal-azure/30 rounded-lg p-4 space-y-2">
-              <p><span className="font-semibold">البريد الإلكتروني:</span> privacy@wisal.app</p>
-              <p><span className="font-semibold">الهاتف:</span> +966 XX XXX XXXX</p>
+              <p><span className="font-semibold">البريد الإلكتروني:</span> info@tech-code.net</p>
               <p><span className="font-semibold">العنوان:</span> المملكة العربية السعودية</p>
             </div>
           </section>

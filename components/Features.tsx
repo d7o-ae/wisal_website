@@ -1,6 +1,6 @@
 import React from 'react';
 import Section from './Section';
-import { Megaphone, Target, BarChart2, ShieldCheck, Languages, Smartphone, Clock } from 'lucide-react';
+import { Megaphone, Target, BarChart2, ShieldCheck, Languages, Smartphone, Clock, TrendingDown, UserX, Sparkles } from 'lucide-react';
 import { FeatureItem } from '../types';
 
 const features: FeatureItem[] = [
@@ -11,6 +11,9 @@ const features: FeatureItem[] = [
   { id: 5, title: 'دعم العربية والإنجليزية', icon: Languages, description: 'واجهة متعددة اللغات لخدمة الجميع.' },
   { id: 6, title: 'تطبيق جوال لأولياء الأمور', icon: Smartphone, description: 'تجربة مستخدم سلسة على الآيفون والأندرويد.' },
   { id: 7, title: 'جدولة المنشورات مسبقًا', icon: Clock, description: 'خطط لإعلاناتك المدرسية بكل راحة.' },
+  { id: 8, title: 'توفير في التكلفة بنسبة 72%', icon: TrendingDown, description: 'خفض كبير في تكاليف الرسائل والتواصل.' },
+  { id: 9, title: 'بدون تسجيل لأولياء الأمور', icon: UserX, description: 'لا حاجة لإنشاء حساب أو تذكر كلمة مرور.' },
+  { id: 10, title: 'واجهة بسيطة ومباشرة', icon: Sparkles, description: 'سهلة الاستخدام لجميع الأعمار والفئات.' },
 ];
 
 const Features: React.FC = () => {

@@ -44,7 +44,7 @@ const AboutAndFooter: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="font-bold text-wisal-primary mb-4">قانوني</h4>
+              <h4 className="font-bold text-wisal-primary mb-4">المزيد</h4>
               <ul className="space-y-2 text-sm text-wisal-secondary">
                 <li>
                   <button 
@@ -62,7 +62,7 @@ const AboutAndFooter: React.FC = () => {
                     شروط الاستخدام
                   </button>
                 </li>
-                <li><a href="#" className="hover:text-wisal-rose transition-colors">تواصل معنا</a></li>
+                <li><a href="https://tech-code.net/contact" target="_blank" rel="noopener noreferrer" className="hover:text-wisal-rose transition-colors">تواصل معنا</a></li>
               </ul>
             </div>
           </div>

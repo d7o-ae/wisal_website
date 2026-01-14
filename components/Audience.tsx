@@ -3,7 +3,7 @@ import Section from './Section';
 import { School, Building2, UserCog, Users } from 'lucide-react';
 
 const audienceList = [
-  { id: 1, title: 'المدارس الدولية والأهلية', icon: School },
+  { id: 1, title: 'المدارس العالمية والأهلية', icon: School },
   { id: 2, title: 'إدارات المدارس', icon: Building2 },
   { id: 3, title: 'مسؤولي التواصل المدرسي', icon: UserCog },
   { id: 4, title: 'أولياء الأمور', icon: Users },
