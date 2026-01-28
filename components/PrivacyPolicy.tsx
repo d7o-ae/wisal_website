@@ -42,25 +42,25 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
               <div>
                 <h4 className="font-semibold text-wisal-secondary mb-2">معلومات المدرسة:</h4>
                 <ul className="list-disc list-inside space-y-1 mr-4">
-                  <li>اسم المدرسة ورقم الترخيص</li>
-                  <li>عنوان المدرسة ومعلومات الاتصال</li>
-                  <li>بيانات المسؤولين والمعلمين</li>
+                  <li>اسم المدرسة وموقعها</li>
+                  <li>رقم الترخيص والسجل التجاري</li>
+                  <li>بيانات المسؤول عن الحساب (الاسم، البريد الإلكتروني، رقم الجوال)</li>
+                  <li>معلومات الاتصال الرسمية للمدرسة</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-wisal-secondary mb-2">معلومات أولياء الأمور:</h4>
+                <h4 className="font-semibold text-wisal-secondary mb-2">معلومات المستخدمين (أولياء الأمور والطلاب):</h4>
+                <p className="text-wisal-muted mb-2 bg-wisal-azure/20 p-3 rounded-lg">
+                  <span className="font-semibold text-wisal-rose">⚠️ مهم:</span> لا نجمع أي معلومات شخصية عن أولياء الأمور أو الطلاب. 
+                  التطبيق لا يتطلب تسجيل دخول ولا يطلب الاسم أو البريد الإلكتروني أو رقم الجوال.
+                </p>
+                <p className="font-semibold text-wisal-secondary mb-2">نجمع فقط البيانات التقنية التالية:</p>
                 <ul className="list-disc list-inside space-y-1 mr-4">
-                  <li>الاسم ورقم الهوية الوطنية</li>
-                  <li>رقم الجوال والبريد الإلكتروني</li>
-                  <li>معلومات الأبناء المسجلين في المدرسة</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-wisal-secondary mb-2">معلومات الطلاب:</h4>
-                <ul className="list-disc list-inside space-y-1 mr-4">
-                  <li>الاسم والصف الدراسي</li>
-                  <li>رقم الطالب في المدرسة</li>
-                  <li>البيانات الأكاديمية والسلوكية (حسب صلاحيات المدرسة)</li>
+                  <li>معلومات الجهاز (نوع الجهاز، نظام التشغيل، الإصدار)</li>
+                  <li>معرّف الجهاز الفريد (Device ID) لأغراض إرسال الإشعارات فقط</li>
+                  <li>الدولة والمدرسة المشترك بها المستخدم</li>
+                  <li>تفضيلات الإشعارات (نوع الإشعارات المفضلة) لتخصيص التجربة</li>
+                  <li>بيانات استخدام عامة لأغراض الإحصائيات والتحليل</li>
                 </ul>
               </div>
             </div>
@@ -68,13 +68,27 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
 
           <section>
             <h3 className="text-xl font-bold text-wisal-primary mb-3">2. كيف نستخدم المعلومات</h3>
-            <ul className="list-disc list-inside space-y-2 mr-4">
-              <li>تقديم خدمات التواصل بين المدرسة وأولياء الأمور</li>
-              <li>إرسال الإشعارات والتنبيهات المدرسية</li>
-              <li>إدارة الحسابات والصلاحيات</li>
-              <li>تحسين جودة الخدمة وتطوير المنصة</li>
-              <li>الامتثال للمتطلبات القانونية والتنظيمية</li>
-            </ul>
+            <div className="space-y-3">
+              <div>
+                <h4 className="font-semibold text-wisal-secondary mb-2">استخدام معلومات المدرسة:</h4>
+                <ul className="list-disc list-inside space-y-2 mr-4">
+                  <li>إنشاء وإدارة حساب المدرسة في المنصة</li>
+                  <li>التواصل مع المسؤولين بخصوص الخدمة والدعم الفني</li>
+                  <li>التحقق من صحة الترخيص والامتثال للمتطلبات التنظيمية</li>
+                  <li>إرسال التحديثات والإشعارات المتعلقة بالمنصة</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-wisal-secondary mb-2">استخدام البيانات التقنية:</h4>
+                <ul className="list-disc list-inside space-y-2 mr-4">
+                  <li>إرسال الإشعارات والتنبيهات المدرسية للأجهزة المناسبة</li>
+                  <li>تحليل أداء المنصة وتحسين تجربة المستخدم</li>
+                  <li>توفير إحصائيات للمدارس حول وصول المنشورات والتفاعل معها</li>
+                  <li>تخصيص تجربة الإشعارات بناءً على تفضيلات المستخدم</li>
+                  <li>ضمان أمان واستقرار المنصة</li>
+                </ul>
+              </div>
+            </div>
           </section>
 
           <section>
@@ -116,7 +130,23 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
           </section>
 
           <section>
-            <h3 className="text-xl font-bold text-wisal-primary mb-3">6. ملفات تعريف الارتباط (Cookies)</h3>
+            <h3 className="text-xl font-bold text-wisal-primary mb-3">6. التصفح وبيانات الموقع الإلكتروني</h3>
+            <p className="leading-relaxed mb-3">
+              عند زيارتك لموقعنا الإلكتروني، قد نقوم بتسجيل بعض البيانات التقنية تلقائياً مثل:
+            </p>
+            <ul className="list-disc list-inside space-y-2 mr-4">
+              <li>عنوان بروتوكول الإنترنت (IP Address)</li>
+              <li>نوع المتصفح ونظام التشغيل</li>
+              <li>تاريخ ووقت الزيارة</li>
+              <li>الصفحات التي تمت زيارتها ومدة البقاء</li>
+            </ul>
+            <p className="leading-relaxed mt-3">
+              تُستخدم هذه البيانات لأغراض تحليلية فقط لتحسين أداء الموقع وتجربة المستخدم، ولا يتم ربطها بأي معلومات شخصية تعرّف بهويتك.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="text-xl font-bold text-wisal-primary mb-3">7. ملفات تعريف الارتباط (Cookies)</h3>
             <p className="leading-relaxed">
               نستخدم ملفات تعريف الارتباط لتحسين تجربة المستخدم، وحفظ تفضيلاتك، وتحليل استخدام المنصة. 
               يمكنك التحكم في إعدادات ملفات تعريف الارتباط من خلال متصفحك.
@@ -124,7 +154,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
           </section>
 
           <section>
-            <h3 className="text-xl font-bold text-wisal-primary mb-3">7. خصوصية الأطفال</h3>
+            <h3 className="text-xl font-bold text-wisal-primary mb-3">8. خصوصية الأطفال</h3>
             <p className="leading-relaxed">
               منصتنا مخصصة للمدارس وأولياء الأمور. نحن لا نجمع معلومات من الأطفال مباشرة دون موافقة ولي الأمر أو المدرسة. 
               جميع معلومات الطلاب تُدار من قبل المدرسة أو ولي الأمر المسجل.
@@ -132,7 +162,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
           </section>
 
           <section>
-            <h3 className="text-xl font-bold text-wisal-primary mb-3">8. الاحتفاظ بالبيانات</h3>
+            <h3 className="text-xl font-bold text-wisal-primary mb-3">9. الاحتفاظ بالبيانات</h3>
             <p className="leading-relaxed">
               نحتفظ بالبيانات الشخصية طالما كان حسابك نشطًا أو حسب الحاجة لتقديم الخدمات. 
               عند إغلاق الحساب، يتم حذف البيانات أو إخفاء هويتها وفقًا لسياساتنا والمتطلبات القانونية.
@@ -140,7 +170,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
           </section>
 
           <section>
-            <h3 className="text-xl font-bold text-wisal-primary mb-3">9. التغييرات على سياسة الخصوصية</h3>
+            <h3 className="text-xl font-bold text-wisal-primary mb-3">10. التغييرات على سياسة الخصوصية</h3>
             <p className="leading-relaxed">
               قد نقوم بتحديث سياسة الخصوصية من وقت لآخر. سنقوم بإشعارك بأي تغييرات جوهرية عبر المنصة أو البريد الإلكتروني. 
               ننصحك بمراجعة هذه الصفحة بشكل دوري.
@@ -148,7 +178,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
           </section>
 
           <section>
-            <h3 className="text-xl font-bold text-wisal-primary mb-3">10. اتصل بنا</h3>
+            <h3 className="text-xl font-bold text-wisal-primary mb-3">11. اتصل بنا</h3>
             <p className="leading-relaxed mb-3">
               إذا كان لديك أي استفسارات أو مخاوف بشأن سياسة الخصوصية هذه، يرجى التواصل معنا:
             </p>
