@@ -7,6 +7,7 @@ import Features from './components/Features';
 import Audience from './components/Audience';
 import Screenshots from './components/Screenshots';
 import WhyWisal from './components/WhyWisal';
+import FAQ from './components/FAQ';
 import CallToAction from './components/CallToAction';
 import AboutAndFooter from './components/AboutAndFooter';
 
@@ -22,6 +23,7 @@ const App: React.FC = () => {
         <Audience />
         <Screenshots />
         <WhyWisal />
+        <FAQ />
         <CallToAction />
       </main>
       <footer className="bg-wisal-bg">
