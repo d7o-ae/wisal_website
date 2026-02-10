@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import Section from './Section';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const AboutAndFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const { t, lang } = useLanguage();
 
   const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -17,9 +19,9 @@ const AboutAndFooter: React.FC = () => {
     <>
       <Section id="about" background="default" className="pb-8">
         <div className="text-center max-w-4xl mx-auto mb-16">
-          <h2 className="text-2xl font-bold text-wisal-primary mb-4">من نحن</h2>
+          <h2 className="text-2xl font-bold text-wisal-primary mb-4">{t.footer.aboutTitle}</h2>
           <p className="text-wisal-secondary/80 leading-relaxed text-lg">
-            تم تطوير منصة وِصال بواسطة <span className="font-semibold text-wisal-primary">Tech-Code.net</span>، وهي شركة تقنية متخصصة في بناء الحلول الرقمية للقطاع التعليمي، وتهدف إلى دعم التحول الرقمي وتقديم أنظمة عملية وموثوقة تلبي احتياجات المؤسسات التعليمية.
+            {t.footer.aboutText} <span className="font-semibold text-wisal-primary">{t.footer.techCode}</span>{t.footer.aboutText2}
           </p>
         </div>
 
@@ -27,48 +29,48 @@ const AboutAndFooter: React.FC = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                 <img src="logo_footer.png" alt="وِصال" className="h-16 w-auto object-contain" />
+                 <img src="logo_footer.png" alt={t.nav.brandName} className="h-16 w-auto object-contain" />
               </div>
               <p className="text-sm text-wisal-muted max-w-xs">
-                منصة التواصل المدرسي التي تجمع بين البساطة والفعالية.
+                {t.footer.tagline}
               </p>
             </div>
             
             <div>
-              <h4 className="font-bold text-wisal-primary mb-4">روابط سريعة</h4>
+              <h4 className="font-bold text-wisal-primary mb-4">{t.footer.quickLinks}</h4>
               <ul className="space-y-2 text-sm text-wisal-secondary">
-                <li><a href="#" onClick={scrollToTop} className="hover:text-wisal-rose transition-colors">الرئيسية</a></li>
-                <li><a href="#features" className="hover:text-wisal-rose transition-colors">المميزات</a></li>
-                <li><a href="#how-it-works" className="hover:text-wisal-rose transition-colors">كيف يعمل</a></li>
+                <li><a href="#" onClick={scrollToTop} className="hover:text-wisal-rose transition-colors">{t.footer.home}</a></li>
+                <li><a href="#features" className="hover:text-wisal-rose transition-colors">{t.nav.features}</a></li>
+                <li><a href="#how-it-works" className="hover:text-wisal-rose transition-colors">{t.nav.howItWorks}</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-wisal-primary mb-4">المزيد</h4>
+              <h4 className="font-bold text-wisal-primary mb-4">{t.footer.more}</h4>
               <ul className="space-y-2 text-sm text-wisal-secondary">
                 <li>
                   <button 
                     onClick={() => setIsPrivacyOpen(true)} 
-                    className="hover:text-wisal-rose transition-colors text-right"
+                    className={`hover:text-wisal-rose transition-colors ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                   >
-                    سياسة الخصوصية
+                    {t.footer.privacyPolicy}
                   </button>
                 </li>
                 <li>
                   <button 
                     onClick={() => setIsTermsOpen(true)} 
-                    className="hover:text-wisal-rose transition-colors text-right"
+                    className={`hover:text-wisal-rose transition-colors ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                   >
-                    شروط الاستخدام
+                    {t.footer.termsOfUse}
                   </button>
                 </li>
-                <li><a href="https://tech-code.net/contact" target="_blank" rel="noopener noreferrer" className="hover:text-wisal-rose transition-colors">تواصل معنا</a></li>
+                <li><a href="https://tech-code.net/contact" target="_blank" rel="noopener noreferrer" className="hover:text-wisal-rose transition-colors">{t.footer.contactUs}</a></li>
               </ul>
             </div>
           </div>
           
           <div className="mt-12 pt-8 border-t border-wisal-azure/50 text-center text-sm text-wisal-muted">
-            <p>جميع الحقوق محفوظة © {currentYear} منصة وِصال.</p>
+            <p>{t.footer.copyright.replace('{year}', String(currentYear))}</p>
           </div>
         </div>
       </Section>

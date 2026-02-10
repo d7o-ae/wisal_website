@@ -1,15 +1,18 @@
 import React from 'react';
 import Section from './Section';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Screenshots: React.FC = () => {
+  const { t, lang } = useLanguage();
+
   return (
     <Section background="default" className="overflow-hidden">
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold text-wisal-primary mb-4">
-          واجهة بسيطة… تجربة احترافية
+          {t.screenshots.title}
         </h2>
         <p className="text-wisal-secondary">
-          صُممت لتكون مألوفة وسهلة الاستخدام منذ اللحظة الأولى.
+          {t.screenshots.subtitle}
         </p>
       </div>
 
@@ -27,28 +30,28 @@ const Screenshots: React.FC = () => {
             <div className="bg-gray-50 aspect-video w-full flex items-center justify-center relative group">
                <img 
                  src="dashboard.png" 
-                 alt="لوحة تحكم وِصال" 
+                 alt={t.screenshots.dashboardAlt}
                  className="w-full h-full object-cover"
                />
                <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="bg-black/70 text-white px-4 py-2 rounded-lg text-sm">لوحة التحكم</span>
+                  <span className="bg-black/70 text-white px-4 py-2 rounded-lg text-sm">{t.screenshots.dashboardLabel}</span>
                </div>
             </div>
           </div>
         </div>
 
         {/* Mobile App Mockup */}
-        <div className="w-2/3 sm:w-1/2 lg:w-1/4 relative z-20 lg:-mr-12 lg:mt-20">
+        <div className={`w-2/3 sm:w-1/2 lg:w-1/4 relative z-20 ${lang === 'ar' ? 'lg:-mr-12' : 'lg:-ml-12'} lg:mt-20`}>
           <div className="bg-wisal-primary rounded-[2.5rem] p-3 shadow-xl border-4 border-wisal-secondary">
             <div className="bg-white rounded-[2rem] overflow-hidden aspect-[9/19.5] relative group">
                 {/* Mobile App Screenshot */}
                 <img 
                  src="mobile.png" 
-                 alt="تطبيق وِصال" 
+                 alt={t.screenshots.mobileAlt}
                  className="w-full h-full object-cover"
                />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="bg-black/70 text-white px-4 py-2 rounded-lg text-sm">تطبيق الجوال</span>
+                  <span className="bg-black/70 text-white px-4 py-2 rounded-lg text-sm">{t.screenshots.mobileLabel}</span>
                </div>
             </div>
           </div>

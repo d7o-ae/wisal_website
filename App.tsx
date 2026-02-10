@@ -1,4 +1,5 @@
 import React from 'react';
+import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProblemSolution from './components/ProblemSolution';
@@ -11,9 +12,10 @@ import FAQ from './components/FAQ';
 import CallToAction from './components/CallToAction';
 import AboutAndFooter from './components/AboutAndFooter';
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const { dir } = useLanguage();
   return (
-    <div className="min-h-screen bg-wisal-bg font-sans selection:bg-wisal-rose selection:text-white">
+    <div dir={dir} className={`min-h-screen bg-wisal-bg font-sans selection:bg-wisal-rose selection:text-white ${dir === 'ltr' ? 'text-left' : 'text-right'}`}>
       <Navbar />
       <main>
         <Hero />
@@ -30,6 +32,14 @@ const App: React.FC = () => {
         <AboutAndFooter />
       </footer>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 };
 

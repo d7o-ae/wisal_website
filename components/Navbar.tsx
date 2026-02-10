@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import Button from './Button';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { lang, t, setLang } = useLanguage();
 
   const navLinks = [
-    { label: 'عن وِصال', href: '#about-wisal' },
-    { label: 'المميزات', href: '#features' },
-    { label: 'كيف يعمل', href: '#how-it-works' },
+    { label: t.nav.about, href: '#about-wisal' },
+    { label: t.nav.features, href: '#features' },
+    { label: t.nav.howItWorks, href: '#how-it-works' },
   ];
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string) => {
     e.preventDefault();
     setIsOpen(false);
     
-    // Handle "Home" or top scroll
     if (href === '#home' || href === '#') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    // Handle section scroll
     const element = document.querySelector(href);
     if (element) {
-      const headerOffset = 80; // Approximate header height
+      const headerOffset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -33,6 +33,10 @@ const Navbar: React.FC = () => {
         behavior: 'smooth'
       });
     }
+  };
+
+  const toggleLanguage = () => {
+    setLang(lang === 'ar' ? 'en' : 'ar');
   };
 
   return (
@@ -46,13 +50,13 @@ const Navbar: React.FC = () => {
               onClick={(e) => handleScroll(e, '#home')} 
               className="flex items-center gap-3 focus:outline-none"
             >
-              <img src="wisal_logo.png" alt="وِصال" className="h-12 w-auto object-contain" />
-              <span className="text-2xl font-bold text-wisal-primary">وِصال</span>
+              <img src="wisal_logo.png" alt={t.nav.brandName} className="h-12 w-auto object-contain" />
+              <span className="text-2xl font-bold text-wisal-primary">{t.nav.brandName}</span>
             </a>
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-8 space-x-reverse">
+          <div className={`hidden md:flex items-center ${lang === 'ar' ? 'space-x-8 space-x-reverse' : 'space-x-8'}`}>
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -63,12 +67,32 @@ const Navbar: React.FC = () => {
                 {link.label}
               </a>
             ))}
+
+            {/* Language Switcher */}
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-wisal-azure hover:border-wisal-rose hover:bg-wisal-azure/20 transition-all duration-200 text-sm font-medium text-wisal-secondary"
+              aria-label="Switch language"
+            >
+              {lang === 'ar' ? (
+                <>
+                  <img src="https://flagcdn.com/w40/gb.png" alt="EN" className="w-5 h-4 rounded-sm object-cover" />
+                  <span>EN</span>
+                </>
+              ) : (
+                <>
+                  <img src="https://flagcdn.com/w40/sa.png" alt="عربي" className="w-5 h-4 rounded-sm object-cover" />
+                  <span>عربي</span>
+                </>
+              )}
+            </button>
+
             <Button 
               variant="primary" 
-              className="mr-4 !py-2 !px-4 text-sm"
+              className={`${lang === 'ar' ? 'mr-4' : 'ml-4'} !py-2 !px-4 text-sm`}
               onClick={(e) => handleScroll(e, '#register')}
             >
-              سجّل مدرستك
+              {t.nav.registerSchool}
             </Button>
           </div>
 
@@ -98,12 +122,30 @@ const Navbar: React.FC = () => {
                 {link.label}
               </a>
             ))}
-            <div className="pt-4">
+            <div className="pt-2">
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-base font-medium text-wisal-secondary hover:bg-wisal-azure/30 transition-all"
+              >
+                {lang === 'ar' ? (
+                  <>
+                    <img src="https://flagcdn.com/w40/gb.png" alt="EN" className="w-5 h-4 rounded-sm object-cover" />
+                    <span>EN</span>
+                  </>
+                ) : (
+                  <>
+                    <img src="https://flagcdn.com/w40/sa.png" alt="عربي" className="w-5 h-4 rounded-sm object-cover" />
+                    <span>عربي</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="pt-2">
               <Button 
                 fullWidth 
                 onClick={(e) => handleScroll(e, '#register')}
               >
-                سجّل مدرستك
+                {t.nav.registerSchool}
               </Button>
             </div>
           </div>

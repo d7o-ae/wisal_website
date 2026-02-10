@@ -1,5 +1,6 @@
 import React from 'react';
 import { X } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface TermsOfUseProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface TermsOfUseProps {
 }
 
 const TermsOfUse: React.FC<TermsOfUseProps> = ({ isOpen, onClose }) => {
+  const { t } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -14,7 +16,7 @@ const TermsOfUse: React.FC<TermsOfUseProps> = ({ isOpen, onClose }) => {
       <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-wisal-azure">
-          <h2 className="text-2xl font-bold text-wisal-primary">شروط الاستخدام</h2>
+          <h2 className="text-2xl font-bold text-wisal-primary">{t.terms.title}</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-wisal-azure rounded-lg transition-colors"
@@ -226,7 +228,7 @@ const TermsOfUse: React.FC<TermsOfUseProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="px-6 py-3 bg-wisal-rose text-white rounded-lg hover:bg-wisal-rose/90 transition-colors font-medium"
           >
-            إغلاق
+            {t.terms.close}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../src/firebase/config';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SchoolRegistrationModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ interface FormData {
 }
 
 const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpen, onClose }) => {
+  const { t, lang } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     schoolName: '',
@@ -103,7 +105,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     if (file && file.size > MAX_FILE_SIZE) {
       setFileErrors({
         ...fileErrors,
-        [fieldName]: `حجم الملف كبير جداً. الحد الأقصى هو 500 كيلوبايت (الملف الحالي: ${Math.round(file.size / 1024)} كيلوبايت)`,
+        [fieldName]: t.modal.fileSizeError.replace('{size}', String(Math.round(file.size / 1024))),
       });
       // Clear the file input
       e.target.value = '';
@@ -261,17 +263,16 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
       console.error('❌ Error message:', error?.message);
       console.error('❌ Full error:', JSON.stringify(error, null, 2));
       
-      // More specific error messages
-      let errorMessage = 'حدث خطأ أثناء إرسال النموذج. يرجى المحاولة مرة أخرى.';
+      let errorMessage = t.modal.errorGeneral;
       
       if (error?.code === 'permission-denied') {
-        errorMessage = 'خطأ في الصلاحيات. يرجى التواصل مع الدعم الفني.';
+        errorMessage = t.modal.errorPermission;
         console.error('❌ FIRESTORE PERMISSION DENIED - Check Firebase rules');
       } else if (error?.code === 'unavailable') {
-        errorMessage = 'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.';
+        errorMessage = t.modal.errorUnavailable;
         console.error('❌ FIRESTORE UNAVAILABLE - Check internet connection');
       } else if (error?.message?.includes('Firebase')) {
-        errorMessage = 'خطأ في الاتصال بقاعدة البيانات. يرجى التحقق من الإعدادات.';
+        errorMessage = t.modal.errorFirebase;
         console.error('❌ FIREBASE CONFIG ERROR - Check firebase config');
       }
       
@@ -304,67 +305,19 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     onClose();
   };
 
-  const countryCodes = [
-    { code: '+966', flag: '🇸🇦', name: 'السعودية' },
-    { code: '+971', flag: '🇦🇪', name: 'الإمارات' },
-    { code: '+965', flag: '🇰🇼', name: 'الكويت' },
-    { code: '+974', flag: '🇶🇦', name: 'قطر' },
-    { code: '+973', flag: '🇧🇭', name: 'البحرين' },
-    { code: '+968', flag: '🇴🇲', name: 'عُمان' },
-    { code: '+962', flag: '🇯🇴', name: 'الأردن' },
-    { code: '+20', flag: '🇪🇬', name: 'مصر' },
-    { code: '+961', flag: '🇱🇧', name: 'لبنان' },
-  ];
+  const countryCodes = t.modal.countryCodes;
 
-  const countries = [
-    { value: 'sa', label: '🇸🇦 السعودية' },
-    { value: 'ae', label: '🇦🇪 الإمارات' },
-    { value: 'kw', label: '🇰🇼 الكويت' },
-    { value: 'qa', label: '🇶🇦 قطر' },
-    { value: 'bh', label: '🇧🇭 البحرين' },
-    { value: 'om', label: '🇴🇲 عُمان' },
-    { value: 'jo', label: '🇯🇴 الأردن' },
-    { value: 'eg', label: '🇪🇬 مصر' },
-    { value: 'lb', label: '🇱🇧 لبنان' },
-    { value: 'other', label: 'آخر' },
-  ];
+  const countries = t.modal.countries;
 
-  const roles = [
-    'مدير المدرسة',
-    'وكيل المدرسة',
-    'منسق',
-    'مسؤول تقنية',
-    'آخر',
-  ];
+  const roles = t.modal.roles;
 
-  const studentCountOptions = [
-    { value: '<200', label: 'أقل من 200' },
-    { value: '200-500', label: '200 – 500' },
-    { value: '500-1000', label: '500 – 1000' },
-    { value: '>1000', label: 'أكثر من 1000' },
-  ];
+  const studentCountOptions = t.modal.studentCounts;
 
-  const preferredOptions = [
-    { value: 'trial', label: 'تجربة مجانية' },
-    { value: 'demo', label: 'عرض توضيحي (Demo)' },
-    { value: 'contact', label: 'تواصل مباشر' },
-  ];
+  const preferredOptions = t.modal.preferredOptions;
 
-  const contactMethods = [
-    { value: 'call', label: '📞 اتصال هاتفي' },
-    { value: 'email', label: '📧 بريد إلكتروني' },
-    { value: 'whatsapp', label: '💬 واتساب' },
-  ];
+  const contactMethods = t.modal.contactMethods;
 
-  const hearAboutUsOptions = [
-    { value: 'search', label: 'محركات البحث (جوجل، بينج)' },
-    { value: 'social', label: 'وسائل التواصل الاجتماعي' },
-    { value: 'friend', label: 'صديق أو زميل' },
-    { value: 'conference', label: 'مؤتمر أو معرض تعليمي' },
-    { value: 'advertisement', label: 'إعلان' },
-    { value: 'email-campaign', label: 'رسالة بريد إلكتروني' },
-    { value: 'other', label: 'أخرى' },
-  ];
+  const hearAboutUsOptions = t.modal.hearAboutUsOptions;
 
   if (submitted) {
     return (
@@ -373,7 +326,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
           <button
             onClick={handleClose}
             className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-3xl font-light"
-            aria-label="إغلاق"
+            aria-label={t.modal.close}
           >
             ×
           </button>
@@ -385,13 +338,13 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
               </svg>
             </div>
             <h3 className="text-2xl font-bold text-wisal-primary mb-4">
-              🎉 تم التسجيل بنجاح!
+              {t.modal.successTitle}
             </h3>
             <p className="text-gray-600 text-lg mb-2">
-              شكراً لتسجيلك في وِصال
+              {t.modal.successMessage}
             </p>
             <p className="text-gray-500">
-              سنتواصل معك خلال 24 ساعة
+              {t.modal.successSubMessage}
             </p>
           </div>
         </div>
@@ -405,7 +358,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
         <button
           onClick={handleClose}
           className="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-3xl font-light z-10"
-          aria-label="إغلاق"
+          aria-label={t.modal.close}
         >
           ×
         </button>
@@ -413,10 +366,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
         {/* Header */}
         <div className="bg-wisal-primary text-white rounded-t-3xl p-6 md:p-8">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
-            سجّل مدرستك
+            {t.modal.registerTitle}
           </h2>
           <p className="text-center text-gray-200">
-            خطوة {currentStep} من 3
+            {t.modal.step.replace('{current}', String(currentStep)).replace('{total}', '3')}
           </p>
           
           {/* Progress Bar */}
@@ -433,11 +386,11 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
             <div className="space-y-5 animate-fadeIn">
-              <h3 className="text-xl font-bold text-wisal-primary mb-4">المعلومات الأساسية</h3>
+              <h3 className="text-xl font-bold text-wisal-primary mb-4">{t.modal.step1Title}</h3>
               
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="schoolName">
-                  اسم المدرسة <span className="text-red-500">*</span>
+                  {t.modal.schoolName} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <input
                   type="text"
@@ -446,15 +399,15 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   value={formData.schoolName}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
-                  placeholder="اسم المدرسة"
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
+                  placeholder={t.modal.schoolNamePlaceholder}
                 />
               </div>
 
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="responsiblePersonName">
-                    اسم الشخص المسؤول <span className="text-red-500">*</span>
+                    {t.modal.responsibleName} <span className="text-red-500">{t.modal.required}</span>
                   </label>
                   <input
                     type="text"
@@ -463,13 +416,13 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     value={formData.responsiblePersonName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
-                    placeholder="الاسم الكامل"
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
+                    placeholder={t.modal.responsibleNamePlaceholder}
                   />
                 </div>
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="responsiblePersonRole">
-                    المسمى الوظيفي <span className="text-red-500">*</span>
+                    {t.modal.jobTitle} <span className="text-red-500">{t.modal.required}</span>
                   </label>
                   <select
                     id="responsiblePersonRole"
@@ -477,9 +430,9 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     value={formData.responsiblePersonRole}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                   >
-                    <option value="">اختر المسمى</option>
+                    <option value="">{t.modal.jobTitlePlaceholder}</option>
                     {roles.map((role) => (
                       <option key={role} value={role}>
                         {role}
@@ -492,7 +445,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="email">
-                    البريد الإلكتروني الرسمي <span className="text-red-500">*</span>
+                    {t.modal.email} <span className="text-red-500">{t.modal.required}</span>
                   </label>
                   <input
                     type="email"
@@ -503,14 +456,14 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     required
                     pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary"
-                    placeholder="example@school.com"
+                    placeholder={t.modal.emailPlaceholder}
                     dir="ltr"
-                    title="يرجى إدخال بريد إلكتروني صحيح"
+                    title={t.modal.emailValidation}
                   />
                 </div>
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="websiteUrl">
-                    الموقع الإلكتروني للمدرسة
+                    {t.modal.website}
                   </label>
                   <input
                     type="url"
@@ -527,14 +480,14 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="phone">
-                  رقم الهاتف / واتساب <span className="text-red-500">*</span>
+                  {t.modal.phone} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <select
                     name="countryCode"
                     value={formData.countryCode}
                     onChange={handleInputChange}
-                    className="w-full sm:w-32 px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
+                    className={`w-full sm:w-32 px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                   >
                     {countryCodes.map((country) => (
                       <option key={country.code} value={country.code}>
@@ -552,9 +505,9 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     pattern="\d{7,11}"
                     maxLength={11}
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary"
-                    placeholder="5X XXX XXXX"
+                    placeholder={t.modal.phonePlaceholder}
                     dir="ltr"
-                    title="يرجى إدخال رقم هاتف صحيح (7-11 أرقام)"
+                    title={t.modal.phoneValidation}
                   />
                 </div>
               </div>
@@ -564,12 +517,12 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
           {/* Step 2: Location & Details */}
           {currentStep === 2 && (
             <div className="space-y-5 animate-fadeIn">
-              <h3 className="text-xl font-bold text-wisal-primary mb-4">الموقع والتفاصيل</h3>
+              <h3 className="text-xl font-bold text-wisal-primary mb-4">{t.modal.step2Title}</h3>
               
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="country">
-                    الدولة <span className="text-red-500">*</span>
+                    {t.modal.country} <span className="text-red-500">{t.modal.required}</span>
                   </label>
                   <select
                     id="country"
@@ -577,9 +530,9 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     value={formData.country}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                   >
-                    <option value="">اختر الدولة</option>
+                    <option value="">{t.modal.countryPlaceholder}</option>
                     {countries.map((country) => (
                       <option key={country.value} value={country.value}>
                         {country.label}
@@ -589,7 +542,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                 </div>
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="city">
-                    المدينة <span className="text-red-500">*</span>
+                    {t.modal.city} <span className="text-red-500">{t.modal.required}</span>
                   </label>
                   <input
                     type="text"
@@ -598,15 +551,15 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     value={formData.city}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
-                    placeholder="المدينة"
+                    className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
+                    placeholder={t.modal.cityPlaceholder}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="studentsCount">
-                  عدد الطلاب (تقريبي) <span className="text-red-500">*</span>
+                  {t.modal.studentsCount} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <select
                   id="studentsCount"
@@ -614,9 +567,9 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   value={formData.studentsCount}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                 >
-                  <option value="">اختر العدد</option>
+                  <option value="">{t.modal.studentsCountPlaceholder}</option>
                   {studentCountOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -627,7 +580,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="commercialRecord">
-                  السجل التجاري <span className="text-red-500">*</span>
+                  {t.modal.commercialRecord} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <input
                   type="file"
@@ -636,9 +589,9 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   onChange={handleFileChange}
                   required
                   accept=".pdf,.jpg,.jpeg,.png"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right file:ml-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-wisal-primary file:text-white hover:file:bg-opacity-90"
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'} file:${lang === 'ar' ? 'ml-4' : 'mr-4'} file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-wisal-primary file:text-white hover:file:bg-opacity-90`}
                 />
-                <p className="text-sm text-gray-500 mt-1">PDF, JPG, PNG (حد أقصى 500 كيلوبايت)</p>
+                <p className="text-sm text-gray-500 mt-1">{t.modal.fileNote}</p>
                 {fileErrors.commercialRecord && (
                   <p className="text-sm text-red-500 mt-1 font-medium">⚠️ {fileErrors.commercialRecord}</p>
                 )}
@@ -646,7 +599,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="schoolLicense">
-                  الرخصة المدرسية <span className="text-red-500">*</span>
+                  {t.modal.schoolLicense} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <input
                   type="file"
@@ -655,9 +608,9 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   onChange={handleFileChange}
                   required
                   accept=".pdf,.jpg,.jpeg,.png"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right file:ml-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-wisal-primary file:text-white hover:file:bg-opacity-90"
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'} file:${lang === 'ar' ? 'ml-4' : 'mr-4'} file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-wisal-primary file:text-white hover:file:bg-opacity-90`}
                 />
-                <p className="text-sm text-gray-500 mt-1">PDF, JPG, PNG (حد أقصى 500 كيلوبايت)</p>
+                <p className="text-sm text-gray-500 mt-1">{t.modal.fileNote}</p>
                 {fileErrors.schoolLicense && (
                   <p className="text-sm text-red-500 mt-1 font-medium">⚠️ {fileErrors.schoolLicense}</p>
                 )}
@@ -668,11 +621,11 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
           {/* Step 3: Preferred Option */}
           {currentStep === 3 && (
             <div className="space-y-5 animate-fadeIn">
-              <h3 className="text-xl font-bold text-wisal-primary mb-4">ماذا تفضل؟</h3>
+              <h3 className="text-xl font-bold text-wisal-primary mb-4">{t.modal.step3Title}</h3>
               
               <div>
                 <label className="block text-gray-700 font-medium mb-3">
-                  نوع الخدمة <span className="text-red-500">*</span>
+                  {t.modal.serviceType} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <div className="space-y-3">
                   {preferredOptions.map((option) => (
@@ -697,7 +650,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-3">
-                  طريقة التواصل المفضلة <span className="text-red-500">*</span>
+                  {t.modal.contactMethod} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <div className="space-y-3">
                   {contactMethods.map((method) => (
@@ -722,7 +675,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="hearAboutUs">
-                  كيف سمعت عن وِصال؟ <span className="text-red-500">*</span>
+                  {t.modal.howHeard} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <select
                   id="hearAboutUs"
@@ -730,9 +683,9 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   value={formData.hearAboutUs}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary text-right"
+                  className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                 >
-                  <option value="">اختر الإجابة</option>
+                  <option value="">{t.modal.howHeardPlaceholder}</option>
                   {hearAboutUsOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -744,12 +697,12 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
               {/* Privacy Notice */}
               <div className="bg-gray-50 rounded-xl p-4 mt-6 text-sm text-gray-600 space-y-2">
                 <p className="flex items-start">
-                  <span className="ml-2">🔒</span>
-                  <span>لن نشارك بياناتك مع أي طرف ثالث</span>
+                  <span className={`${lang === 'ar' ? 'ml-2' : 'mr-2'}`}>🔒</span>
+                  <span>{t.modal.privacyNote1}</span>
                 </p>
                 <p className="flex items-start">
-                  <span className="ml-2">⏱</span>
-                  <span>سيتم التواصل خلال يوم عمل واحد</span>
+                  <span className={`${lang === 'ar' ? 'ml-2' : 'mr-2'}`}>⏱</span>
+                  <span>{t.modal.privacyNote2}</span>
                 </p>
               </div>
 
@@ -771,7 +724,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                 disabled={isSubmitting}
                 className="flex-1 px-6 py-3 border-2 border-wisal-primary text-wisal-primary rounded-xl font-bold hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
-                السابق
+                {t.modal.previous}
               </button>
             )}
             
@@ -786,7 +739,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                التالي
+                {t.modal.next}
               </button>
             ) : (
               <button
@@ -798,7 +751,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                {isSubmitting ? 'جاري الإرسال...' : 'سجل الآن'}
+                {isSubmitting ? t.modal.submitting : t.modal.submit}
               </button>
             )}
           </div>
