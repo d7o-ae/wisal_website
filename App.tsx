@@ -10,6 +10,7 @@ import Screenshots from './components/Screenshots';
 import WhyWisal from './components/WhyWisal';
 import FAQ from './components/FAQ';
 import CallToAction from './components/CallToAction';
+import Pricing from './components/Pricing';
 import AboutAndFooter from './components/AboutAndFooter';
 
 const AppContent: React.FC = () => {
@@ -27,6 +28,7 @@ const AppContent: React.FC = () => {
         <WhyWisal />
         <FAQ />
         <CallToAction />
+        <Pricing />
       </main>
       <footer className="bg-wisal-bg">
         <AboutAndFooter />

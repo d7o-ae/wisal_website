@@ -291,6 +291,131 @@ export const en = {
     agreement: 'By using the Wisal platform, you agree to the terms of this Privacy Policy.',
   },
 
+  // Pricing Plans
+  pricing: {
+    title: 'Pricing Plans',
+    subtitle: 'Choose the perfect plan for your school',
+    checkoutError: 'An error occurred while opening checkout. Please try again.',
+    
+    starter: {
+      name: 'Starter Plan',
+      badge: 'Starter',
+      description: 'A completely free school communication platform that allows you to publish announcements and deliver them to parents easily and professionally.',
+      price: 'Free',
+      priceDescription: 'Forever',
+      cta: 'Get Started Free',
+      features: [
+        {
+          category: 'Registration & Subscription',
+          items: [
+            'Completely free, forever',
+            'Available for any school',
+            'Basic appearance in app school directory',
+          ],
+        },
+        {
+          category: 'Publishing & Communication',
+          items: [
+            'Unlimited text posts',
+            'Instant post publishing',
+            'Instant notifications to parents',
+            'Unlimited followers',
+            'View count and engagement display',
+          ],
+        },
+        {
+          category: 'Organization & Management',
+          items: [
+            'Create categories, sections, and grades (up to 2 sections and 5 grades only)',
+            'One main administrative user',
+            'Public follow available to all parents',
+          ],
+        },
+        {
+          category: 'Reports & Analytics',
+          items: [
+            'Basic reading count reports',
+            'Engagement display per post',
+            'Dashboard view only',
+          ],
+        },
+        {
+          category: 'Support & Languages',
+          items: [
+            'Arabic and English language support',
+            'Knowledge base and user guide',
+            'Continuous system updates',
+          ],
+        },
+      ],
+    },
+    
+    professional: {
+      name: 'Professional Plan',
+      badge: 'Professional',
+      recommended: 'Recommended',
+      description: 'A complete solution for managing school communication with high professionalism, advanced control, and precise analytics.',
+      price: '$17.70',
+      priceDescription: 'per month',
+      cta: 'Subscribe Now',
+      features: [
+        {
+          category: 'Registration & Subscription',
+          items: [
+            'Paid monthly or annually',
+            'Available for any school',
+            'Premium badge at top of app directory',
+          ],
+        },
+        {
+          category: 'Advanced Publishing',
+          items: [
+            'Unlimited posts of all types',
+            'Schedule posts in advance plus instant publishing',
+            'Instant notifications to parents',
+            'Unlimited followers',
+            'Multimedia posts (images – videos – files – links)',
+          ],
+        },
+        {
+          category: 'Advanced Management',
+          items: [
+            'Unlimited sections and grades',
+            'Unlimited system users',
+            'Private follow via OTP verification for parents',
+          ],
+        },
+        {
+          category: 'Professional Analytics',
+          items: [
+            'Advanced engagement reports',
+            'Time-comparative statistics',
+            'Actual reach measurement',
+            'Exportable reports in multiple formats',
+          ],
+        },
+        {
+          category: 'Premium Support',
+          items: [
+            'Direct technical support tickets',
+            'Suggestion reception',
+            'Priority response',
+            'Initial setup support',
+          ],
+        },
+        {
+          category: 'Artificial Intelligence',
+          items: [
+            'Post writing enhancement',
+            'Attractive title suggestions',
+            'Quick language proofreading',
+            'Professional rewriting with one click',
+          ],
+        },
+      ],
+    },
+  },
+
   // Download App Modal
   downloadModal: {
     title: 'Download Wisal App',
