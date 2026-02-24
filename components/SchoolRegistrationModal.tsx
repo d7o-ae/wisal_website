@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../src/firebase/config';
@@ -15,14 +15,13 @@ interface FormData {
   responsiblePersonRole: string;
   email: string;
   websiteUrl: string;
-  countryCode: string;
   phone: string;
   country: string;
   city: string;
   studentsCount: string;
   commercialRecord: File | null;
   schoolLicense: File | null;
-  preferredOption: string;
+  preferredPlan: string;
   preferredContactMethod: string;
   hearAboutUs: string;
 }
@@ -36,14 +35,13 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     responsiblePersonRole: '',
     email: '',
     websiteUrl: '',
-    countryCode: '+966',
     phone: '',
     country: '',
     city: '',
     studentsCount: '',
     commercialRecord: null,
     schoolLicense: null,
-    preferredOption: '',
+    preferredPlan: '',
     preferredContactMethod: '',
     hearAboutUs: '',
   });
@@ -51,10 +49,14 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [countrySearch, setCountrySearch] = useState('');
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [fileErrors, setFileErrors] = useState<{
     commercialRecord?: string;
     schoolLicense?: string;
   }>({});
+
+  const countryDropdownRef = useRef<HTMLDivElement>(null);
 
   // Test Firebase connection on mount
   useEffect(() => {
@@ -71,6 +73,23 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
       }
     }
   }, [isOpen]);
+
+  // Close country dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
+        setShowCountryDropdown(false);
+      }
+    };
+
+    if (showCountryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCountryDropdown]);
 
   if (!isOpen) return null;
 
@@ -164,7 +183,7 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
   const validateStep3 = () => {
     return (
-      formData.preferredOption !== '' &&
+      formData.preferredPlan !== '' &&
       formData.preferredContactMethod !== '' &&
       formData.hearAboutUs !== ''
     );
@@ -232,11 +251,11 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
         responsiblePersonRole: formData.responsiblePersonRole,
         email: formData.email,
         websiteUrl: formData.websiteUrl || '',
-        phone: `${formData.countryCode} ${formData.phone}`,
+        phone: formData.phone,
         country: formData.country,
         city: formData.city,
         studentsCount: formData.studentsCount,
-        preferredOption: formData.preferredOption,
+        preferredPlan: formData.preferredPlan,
         preferredContactMethod: formData.preferredContactMethod,
         hearAboutUs: formData.hearAboutUs,
         // Add file URLs and names
@@ -290,14 +309,13 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
       responsiblePersonRole: '',
       email: '',
       websiteUrl: '',
-      countryCode: '+966',
       phone: '',
       country: '',
       city: '',
       studentsCount: '',
       commercialRecord: null,
       schoolLicense: null,
-      preferredOption: '',
+      preferredPlan: '',
       preferredContactMethod: '',
       hearAboutUs: '',
     });
@@ -305,15 +323,23 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
     onClose();
   };
 
-  const countryCodes = t.modal.countryCodes;
-
   const countries = t.modal.countries;
+
+  // Filter countries based on search
+  const filteredCountries = countries.filter((country: any) =>
+    country.label.toLowerCase().includes(countrySearch.toLowerCase()) ||
+    country.value.toLowerCase().includes(countrySearch.toLowerCase())
+  );
+
+  // Get country code from value (e.g., 'sa' -> 'SA')
+  const getCountryCode = (value: string) => {
+    if (value === 'other') return null;
+    return value.toUpperCase();
+  };
 
   const roles = t.modal.roles;
 
   const studentCountOptions = t.modal.studentCounts;
-
-  const preferredOptions = t.modal.preferredOptions;
 
   const contactMethods = t.modal.contactMethods;
 
@@ -482,34 +508,17 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="phone">
                   {t.modal.phone} <span className="text-red-500">{t.modal.required}</span>
                 </label>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <select
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    className={`w-full sm:w-32 px-3 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
-                  >
-                    {countryCodes.map((country) => (
-                      <option key={country.code} value={country.code}>
-                        {country.flag} {country.code}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    pattern="\d{7,11}"
-                    maxLength={11}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary"
-                    placeholder={t.modal.phonePlaceholder}
-                    dir="ltr"
-                    title={t.modal.phoneValidation}
-                  />
-                </div>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary"
+                  placeholder={t.modal.phonePlaceholder}
+                  dir="ltr"
+                />
               </div>
             </div>
           )}
@@ -524,21 +533,64 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="country">
                     {t.modal.country} <span className="text-red-500">{t.modal.required}</span>
                   </label>
-                  <select
-                    id="country"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    required
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-wisal-primary ${lang === 'ar' ? 'text-right' : 'text-left'}`}
-                  >
-                    <option value="">{t.modal.countryPlaceholder}</option>
-                    {countries.map((country) => (
-                      <option key={country.value} value={country.value}>
-                        {country.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative" ref={countryDropdownRef}>
+                    <div className="flex items-center gap-2 w-full px-4 py-3 border border-gray-300 rounded-xl focus-within:ring-2 focus-within:ring-wisal-primary">
+                      {formData.country && getCountryCode(formData.country) && (
+                        <img
+                          src={`https://flagcdn.com/w20/${getCountryCode(formData.country)?.toLowerCase()}.png`}
+                          alt=""
+                          className="w-5 h-4"
+                        />
+                      )}
+                      <input
+                        type="text"
+                        id="country"
+                        value={countrySearch}
+                        onChange={(e) => {
+                          setCountrySearch(e.target.value);
+                          setShowCountryDropdown(true);
+                        }}
+                        onFocus={() => setShowCountryDropdown(true)}
+                        required={!formData.country}
+                        placeholder={t.modal.countryPlaceholder}
+                        className={`flex-1 outline-none ${lang === 'ar' ? 'text-right' : 'text-left'}`}
+                      />
+                    </div>
+                    {showCountryDropdown && filteredCountries.length > 0 && (
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                        {filteredCountries.map((country: any) => (
+                          <div
+                            key={country.value}
+                            onClick={() => {
+                              setFormData({ ...formData, country: country.value });
+                              setCountrySearch(country.label.replace(/🇸🇦|🇦🇪|🇰🇼|🇶🇦|🇧🇭|🇴🇲|🇯🇴|🇪🇬|🇱🇧|🇸🇾|🇮🇶|🇾🇪|🇵🇸|🇩🇿|🇲🇦|🇹🇳|🇱🇾|🇸🇩|🇲🇷|🇸🇴|🇩🇯|🇰🇲|🇹🇷|🇮🇷|🇦🇫|🇵🇰|🇺🇸|🇬🇧|🇨🇦|🇦🇺|🇩🇪|🇫🇷|🇮🇹|🇪🇸|🇳🇱|🇸🇪|🇳🇴|🇩🇰|🇨🇭|🇦🇹|🇧🇪|🇷🇺|🇨🇳|🇯🇵|🇰🇷|🇮🇳|🇮🇩|🇲🇾|🇸🇬|🇹🇭|🇧🇷|🇲🇽|🇦🇷|🇿🇦|🇳🇬|🇰🇪/g, '').trim());
+                              setShowCountryDropdown(false);
+                            }}
+                            className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer ${lang === 'ar' ? 'flex-row-reverse' : ''}`}
+                          >
+                            {getCountryCode(country.value) ? (
+                              <img
+                                src={`https://flagcdn.com/w20/${getCountryCode(country.value)?.toLowerCase()}.png`}
+                                alt=""
+                                className="w-5 h-4"
+                              />
+                            ) : (
+                              <span className="w-5"></span>
+                            )}
+                            <span className={lang === 'ar' ? 'text-right' : 'text-left'}>
+                              {country.label.replace(/🇸🇦|🇦🇪|🇰🇼|🇶🇦|🇧🇭|🇴🇲|🇯🇴|🇪🇬|🇱🇧|🇸🇾|🇮🇶|🇾🇪|🇵🇸|🇩🇿|🇲🇦|🇹🇳|🇱🇾|🇸🇩|🇲🇷|🇸🇴|🇩🇯|🇰🇲|🇹🇷|🇮🇷|🇦🇫|🇵🇰|🇺🇸|🇬🇧|🇨🇦|🇦🇺|🇩🇪|🇫🇷|🇮🇹|🇪🇸|🇳🇱|🇸🇪|🇳🇴|🇩🇰|🇨🇭|🇦🇹|🇧🇪|🇷🇺|🇨🇳|🇯🇵|🇰🇷|🇮🇳|🇮🇩|🇲🇾|🇸🇬|🇹🇭|🇧🇷|🇲🇽|🇦🇷|🇿🇦|🇳🇬|🇰🇪/g, '').trim()}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <input
+                      type="hidden"
+                      name="country"
+                      value={formData.country}
+                      required
+                    />
+                  </div>
                 </div>
                 <div className="flex-1">
                   <label className="block text-gray-700 font-medium mb-2" htmlFor="city">
@@ -625,24 +677,24 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
               
               <div>
                 <label className="block text-gray-700 font-medium mb-3">
-                  {t.modal.serviceType} <span className="text-red-500">{t.modal.required}</span>
+                  {t.modal.preferredPlan} <span className="text-red-500">{t.modal.required}</span>
                 </label>
                 <div className="space-y-3">
-                  {preferredOptions.map((option) => (
+                  {t.modal.plans.map((plan: any) => (
                     <label
-                      key={option.value}
+                      key={plan.value}
                       className="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-wisal-primary transition-colors"
                     >
                       <input
                         type="radio"
-                        name="preferredOption"
-                        value={option.value}
-                        checked={formData.preferredOption === option.value}
+                        name="preferredPlan"
+                        value={plan.value}
+                        checked={formData.preferredPlan === plan.value}
                         onChange={handleInputChange}
                         required
                         className="ml-3 w-5 h-5 text-wisal-primary"
                       />
-                      <span className="text-lg">{option.label}</span>
+                      <span className="text-lg">{plan.label}</span>
                     </label>
                   ))}
                 </div>

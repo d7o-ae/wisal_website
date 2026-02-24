@@ -27,8 +27,8 @@ const AppContent: React.FC = () => {
         <Screenshots />
         <WhyWisal />
         <FAQ />
-        <CallToAction />
         <Pricing />
+        <CallToAction />
       </main>
       <footer className="bg-wisal-bg">
         <AboutAndFooter />

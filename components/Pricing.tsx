@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Section from './Section';
-import { Check, Crown, Sparkles } from 'lucide-react';
+import { Check, Crown, Sparkles, UserPlus, Megaphone, Settings, BarChart3, HeadphonesIcon, Zap, ChevronDown, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
-
-// Declare Freemius Checkout on window
-declare global {
-  interface Window {
-    FS?: {
-      Checkout: new (config: any) => {
-        open: (options: any) => void;
-      };
-    };
-  }
-}
 
 const Pricing: React.FC = () => {
   const { t, lang } = useLanguage();
+  const [starterExpanded, setStarterExpanded] = useState(false);
+  const [professionalExpanded, setProfessionalExpanded] = useState(false);
+
+  // Icon mapping for feature categories
+  const getCategoryIcon = (index: number, isProfessional: boolean = false) => {
+    const iconClass = isProfessional ? "w-4 h-4 text-wisal-azure" : "w-4 h-4 text-wisal-primary";
+    const icons = [
+      <UserPlus className={iconClass} />,           // Registration
+      <Megaphone className={iconClass} />,          // Publishing
+      <Settings className={iconClass} />,           // Management
+      <BarChart3 className={iconClass} />,          // Analytics
+      <HeadphonesIcon className={iconClass} />,     // Support
+      <Zap className={iconClass} />,                // AI
+    ];
+    return icons[index] || <Check className={iconClass} />;
+  };
 
   const scrollToRegister = () => {
     const element = document.querySelector('#register');
@@ -27,46 +32,8 @@ const Pricing: React.FC = () => {
     }
   };
 
-  const handleProfessionalCheckout = async () => {
-    if (typeof window.FS === 'undefined') {
-      console.error('Freemius Checkout script not loaded');
-      alert(t.pricing.checkoutError || 'Checkout system is loading. Please try again.');
-      return;
-    }
-
-    try {
-      const handler = new window.FS.Checkout({
-        product_id: '24578',
-        plan_id: '40818',
-        public_key: 'pk_71a9f5b9ef5907cffb17923f9e7f7',
-        image: 'https://d7o-ae.github.io/wisal_website/wisal_logo.png',
-      });
-
-      // TODO: For production, fetch sandbox params from your backend endpoint
-      // const sandbox = await fetch('/api/freemius-sandbox').then(res => res.json());
-
-      handler.open({
-        name: 'Wisal - Professional Plan',
-        // sandbox: sandbox, // Remove this in production
-        purchaseCompleted: (response: any) => {
-          console.log('Purchase completed:', response);
-          console.log('User email:', response.user.email);
-          console.log('License key:', response.license.key);
-          // Handle successful purchase (e.g., redirect to dashboard, show success message)
-        },
-        success: (response: any) => {
-          console.log('Checkout closed after successful purchase:', response);
-          // Additional success handling
-        },
-      });
-    } catch (error) {
-      console.error('Checkout error:', error);
-      alert(t.pricing.checkoutError || 'An error occurred. Please try again.');
-    }
-  };
-
   return (
-    <Section background="gradient" className="relative overflow-hidden">
+    <Section id="pricing" background="gradient" className="relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 right-0 w-96 h-96 bg-wisal-rose rounded-full blur-3xl"></div>
@@ -111,9 +78,12 @@ const Pricing: React.FC = () => {
             </button>
 
             <div className="space-y-4">
-              {t.pricing.starter.features.map((category: any, idx: number) => (
+              {t.pricing.starter.features.slice(0, starterExpanded ? undefined : 2).map((category: any, idx: number) => (
                 <div key={idx}>
-                  <h4 className="font-semibold text-wisal-primary mb-2 text-sm">{category.category}</h4>
+                  <h4 className="font-semibold text-wisal-primary mb-2 text-sm flex items-center gap-2">
+                    {getCategoryIcon(idx)}
+                    {category.category}
+                  </h4>
                   <ul className="space-y-2">
                     {category.items.map((item: string, itemIdx: number) => (
                       <li key={itemIdx} className="flex items-start gap-2 text-sm text-wisal-secondary">
@@ -124,6 +94,25 @@ const Pricing: React.FC = () => {
                   </ul>
                 </div>
               ))}
+              
+              {t.pricing.starter.features.length > 2 && (
+                <button
+                  onClick={() => setStarterExpanded(!starterExpanded)}
+                  className="w-full mt-4 py-2 px-4 text-sm font-medium text-wisal-primary hover:bg-wisal-azure/20 rounded-lg transition-all flex items-center justify-center gap-2"
+                >
+                  {starterExpanded ? (
+                    <>
+                      <span>{t.pricing.showLess}</span>
+                      <ChevronUp className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      <span>{t.pricing.showAllFeatures}</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
 
@@ -153,16 +142,19 @@ const Pricing: React.FC = () => {
             </div>
 
             <button
-              onClick={handleProfessionalCheckout}
+              onClick={scrollToRegister}
               className="w-full bg-white text-wisal-primary py-3 px-6 rounded-xl font-semibold hover:bg-wisal-azure transition-all duration-200 mb-8 shadow-lg"
             >
               {t.pricing.professional.cta}
             </button>
 
             <div className="space-y-4">
-              {t.pricing.professional.features.map((category: any, idx: number) => (
+              {t.pricing.professional.features.slice(0, professionalExpanded ? undefined : 2).map((category: any, idx: number) => (
                 <div key={idx}>
-                  <h4 className="font-semibold text-white mb-2 text-sm">{category.category}</h4>
+                  <h4 className="font-semibold text-white mb-2 text-sm flex items-center gap-2">
+                    {getCategoryIcon(idx, true)}
+                    {category.category}
+                  </h4>
                   <ul className="space-y-2">
                     {category.items.map((item: string, itemIdx: number) => (
                       <li key={itemIdx} className="flex items-start gap-2 text-sm text-wisal-azure">
@@ -173,6 +165,25 @@ const Pricing: React.FC = () => {
                   </ul>
                 </div>
               ))}
+              
+              {t.pricing.professional.features.length > 2 && (
+                <button
+                  onClick={() => setProfessionalExpanded(!professionalExpanded)}
+                  className="w-full mt-4 py-2 px-4 text-sm font-medium text-white hover:bg-white/10 rounded-lg transition-all flex items-center justify-center gap-2"
+                >
+                  {professionalExpanded ? (
+                    <>
+                      <span>{t.pricing.showLess}</span>
+                      <ChevronUp className="w-4 h-4" />
+                    </>
+                  ) : (
+                    <>
+                      <span>{t.pricing.showAllFeatures}</span>
+                      <ChevronDown className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ const Navbar: React.FC = () => {
     { label: t.nav.about, href: '#about-wisal' },
     { label: t.nav.features, href: '#features' },
     { label: t.nav.howItWorks, href: '#how-it-works' },
+    { label: t.nav.pricing, href: '#pricing' },
   ];
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string) => {
