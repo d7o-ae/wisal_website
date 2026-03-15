@@ -164,8 +164,8 @@ export const en = {
     step2Title: 'Location & Details',
     step3Title: 'What Do You Prefer?',    preferredPlan: 'Preferred Plan',
     plans: [
-      { value: 'starter', label: 'Starter Plan - Free' },
-      { value: 'professional', label: 'Professional Plan - $17.70/month' },
+      { value: 'Starter', label: 'Starter Plan - Free' },
+      { value: 'Professional', label: 'Professional Plan - $17.70/month' },
     ],    schoolName: 'School Name',
     schoolNamePlaceholder: 'School Name',
     responsibleName: 'Responsible Person Name',
@@ -222,23 +222,23 @@ export const en = {
     preferredOptions: [
       { value: 'trial', label: 'Free Trial' },
       { value: 'demo', label: 'Demo' },
-      { value: 'contact', label: 'Direct Contact' },
+      { value: 'Contact', label: 'Direct Contact' },
     ],
     // Contact methods
     contactMethods: [
-      { value: 'call', label: '📞 Phone Call' },
-      { value: 'email', label: '📧 Email' },
-      { value: 'whatsapp', label: '💬 WhatsApp' },
+      { value: 'Call', label: '📞 Phone Call' },
+      { value: 'Email', label: '📧 Email' },
+      { value: 'WhatsApp', label: '💬 WhatsApp' },
     ],
     // How heard options
     hearAboutUsOptions: [
-      { value: 'search', label: 'Search Engines (Google, Bing)' },
-      { value: 'social', label: 'Social Media' },
-      { value: 'friend', label: 'Friend or Colleague' },
-      { value: 'conference', label: 'Conference or Education Fair' },
-      { value: 'advertisement', label: 'Advertisement' },
-      { value: 'email-campaign', label: 'Email Campaign' },
-      { value: 'other', label: 'Other' },
+      { value: 'Search', label: 'Search Engines (Google, Bing)' },
+      { value: 'Social', label: 'Social Media' },
+      { value: 'Friend', label: 'Friend or Colleague' },
+      { value: 'Conference', label: 'Conference or Education Fair' },
+      { value: 'Advertisement', label: 'Advertisement' },
+      { value: 'EmailCampaign', label: 'Email Campaign' },
+      { value: 'Other', label: 'Other' },
     ],
     // Countries
     countries: [

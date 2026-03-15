@@ -165,8 +165,8 @@ export const ar = {
     step3Title: 'ماذا تفضل؟',
     preferredPlan: 'الخطة المفضلة',
     plans: [
-      { value: 'starter', label: 'باقة الانطلاقة (Starter) - مجاني' },
-      { value: 'professional', label: 'باقة الاحتراف (Professional) - $17.70/شهر' },
+      { value: 'Starter', label: 'باقة الانطلاقة (Starter) - مجاني' },
+      { value: 'Professional', label: 'باقة الاحتراف (Professional) - $17.70/شهر' },
     ],
     schoolName: 'اسم المدرسة',
     schoolNamePlaceholder: 'اسم المدرسة',
@@ -224,23 +224,23 @@ export const ar = {
     preferredOptions: [
       { value: 'trial', label: 'تجربة مجانية' },
       { value: 'demo', label: 'عرض توضيحي (Demo)' },
-      { value: 'contact', label: 'تواصل مباشر' },
+      { value: 'Contact', label: 'تواصل مباشر' },
     ],
     // Contact methods
     contactMethods: [
-      { value: 'call', label: '📞 اتصال هاتفي' },
-      { value: 'email', label: '📧 بريد إلكتروني' },
-      { value: 'whatsapp', label: '💬 واتساب' },
+      { value: 'Call', label: '📞 اتصال هاتفي' },
+      { value: 'Email', label: '📧 بريد إلكتروني' },
+      { value: 'WhatsApp', label: '💬 واتساب' },
     ],
     // How heard options
     hearAboutUsOptions: [
-      { value: 'search', label: 'محركات البحث (جوجل، بينج)' },
-      { value: 'social', label: 'وسائل التواصل الاجتماعي' },
-      { value: 'friend', label: 'صديق أو زميل' },
-      { value: 'conference', label: 'مؤتمر أو معرض تعليمي' },
-      { value: 'advertisement', label: 'إعلان' },
-      { value: 'email-campaign', label: 'رسالة بريد إلكتروني' },
-      { value: 'other', label: 'أخرى' },
+      { value: 'Search', label: 'محركات البحث (جوجل، بينج)' },
+      { value: 'Social', label: 'وسائل التواصل الاجتماعي' },
+      { value: 'Friend', label: 'صديق أو زميل' },
+      { value: 'Conference', label: 'مؤتمر أو معرض تعليمي' },
+      { value: 'Advertisement', label: 'إعلان' },
+      { value: 'EmailCampaign', label: 'رسالة بريد إلكتروني' },
+      { value: 'Other', label: 'أخرى' },
     ],
     // Countries
     countries: [
