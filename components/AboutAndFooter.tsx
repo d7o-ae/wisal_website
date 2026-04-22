@@ -6,9 +6,30 @@ import { useLanguage } from '../i18n/LanguageContext';
 
 const AboutAndFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
-  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const path = window.location.pathname;
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(() => path.endsWith('/privacy'));
+  const [isTermsOpen, setIsTermsOpen] = useState(() => path.endsWith('/terms'));
   const { t, lang } = useLanguage();
+
+  const openPrivacy = () => {
+    setIsPrivacyOpen(true);
+    history.pushState(null, '', '/privacy');
+  };
+
+  const closePrivacy = () => {
+    setIsPrivacyOpen(false);
+    history.pushState(null, '', '/');
+  };
+
+  const openTerms = () => {
+    setIsTermsOpen(true);
+    history.pushState(null, '', '/terms');
+  };
+
+  const closeTerms = () => {
+    setIsTermsOpen(false);
+    history.pushState(null, '', '/');
+  };
 
   const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -50,7 +71,7 @@ const AboutAndFooter: React.FC = () => {
               <ul className="space-y-2 text-sm text-wisal-secondary">
                 <li>
                   <button 
-                    onClick={() => setIsPrivacyOpen(true)} 
+                    onClick={openPrivacy} 
                     className={`hover:text-wisal-rose transition-colors ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                   >
                     {t.footer.privacyPolicy}
@@ -58,7 +79,7 @@ const AboutAndFooter: React.FC = () => {
                 </li>
                 <li>
                   <button 
-                    onClick={() => setIsTermsOpen(true)} 
+                    onClick={openTerms} 
                     className={`hover:text-wisal-rose transition-colors ${lang === 'ar' ? 'text-right' : 'text-left'}`}
                   >
                     {t.footer.termsOfUse}
@@ -75,8 +96,8 @@ const AboutAndFooter: React.FC = () => {
         </div>
       </Section>
 
-      <PrivacyPolicy isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
-      <TermsOfUse isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
+      <PrivacyPolicy isOpen={isPrivacyOpen} onClose={closePrivacy} />
+      <TermsOfUse isOpen={isTermsOpen} onClose={closeTerms} />
     </>
   );
 };
