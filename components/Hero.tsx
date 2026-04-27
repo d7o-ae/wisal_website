@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
           <Button 
             variant="outline" 
             className="text-lg px-8 py-4 group"
-            onClick={() => window.open('https://wisal-5d1e5.web.app/', '_blank')}
+            onClick={() => window.open('https://db.wisal-app.com', '_blank')}
           >
              {t.hero.dashboardBtn}
              <ArrowIcon className={`${lang === 'ar' ? 'mr-2' : 'ml-2'} w-5 h-5 transition-transform ${lang === 'ar' ? 'group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} />
