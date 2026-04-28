@@ -41,5 +41,20 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./dist/
-          server-dir: /public_html/
-          dangerous-clean-slate: true
+          server-dir: public_html/
+          dangerous-clean-slate: false
+
+      - name: Verify deployment
+        run: |
+          echo "Waiting for server to process upload..."
+          sleep 5
+          DEPLOYED=$(curl -s https://wisal-app.com/index.html | grep -o 'src="/assets/[^"]*"')
+          echo "Live script src: $DEPLOYED"
+          BUILT=$(grep -o 'src="/assets/[^"]*"' dist/index.html)
+          echo "Built script src: $BUILT"
+          if [ "$DEPLOYED" = "$BUILT" ]; then
+            echo "✅ Deployment verified: live matches build"
+          else
+            echo "❌ Mismatch: live=$DEPLOYED built=$BUILT"
+            exit 1
+          fi
