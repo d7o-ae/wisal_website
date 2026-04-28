@@ -3,6 +3,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../src/firebase/config';
 import { useLanguage } from '../i18n/LanguageContext';
+import Tooltip from './Tooltip';
 
 interface SchoolRegistrationModalProps {
   isOpen: boolean;
@@ -611,7 +612,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="studentsCount">
-                  {t.modal.studentsCount} <span className="text-red-500">{t.modal.required}</span>
+                  <span className="inline-flex items-center gap-2">
+                    {t.modal.studentsCount} <span className="text-red-500">{t.modal.required}</span>
+                    <Tooltip text={t.modal.tooltips.studentsCount} />
+                  </span>
                 </label>
                 <select
                   id="studentsCount"
@@ -632,7 +636,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="commercialRecord">
-                  {t.modal.commercialRecord} <span className="text-red-500">{t.modal.required}</span>
+                  <span className="inline-flex items-center gap-2">
+                    {t.modal.commercialRecord} <span className="text-red-500">{t.modal.required}</span>
+                    <Tooltip text={t.modal.tooltips.commercialRecord} />
+                  </span>
                 </label>
                 <input
                   type="file"
@@ -651,7 +658,10 @@ const SchoolRegistrationModal: React.FC<SchoolRegistrationModalProps> = ({ isOpe
 
               <div>
                 <label className="block text-gray-700 font-medium mb-2" htmlFor="schoolLicense">
-                  {t.modal.schoolLicense} <span className="text-red-500">{t.modal.required}</span>
+                  <span className="inline-flex items-center gap-2">
+                    {t.modal.schoolLicense} <span className="text-red-500">{t.modal.required}</span>
+                    <Tooltip text={t.modal.tooltips.schoolLicense} />
+                  </span>
                 </label>
                 <input
                   type="file"

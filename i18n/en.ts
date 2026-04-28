@@ -185,10 +185,15 @@ export const en = {
     cityPlaceholder: 'City',
     studentsCount: 'Number of Students (approx.)',
     studentsCountPlaceholder: 'Select Count',
-    commercialRecord: 'Commercial Record',
-    schoolLicense: 'School License',
+    commercialRecord: 'Institution Registration Document',
+    schoolLicense: 'Educational Operating License',
     fileNote: 'PDF, JPG, PNG (max 500 KB)',
     fileSizeError: 'File too large. Maximum is 500 KB (current file: {size} KB)',
+    tooltips: {
+      commercialRecord: 'Any official document proving the school\'s registration as an educational institution (e.g., business registration, certificate of incorporation, or equivalent in your country)',
+      schoolLicense: 'The license issued by the competent educational authority that permits the school to operate educational activities',
+      studentsCount: 'Approximate number of currently enrolled students - helps us provide the best plan for your needs',
+    },
     serviceType: 'Service Type',
     contactMethod: 'Preferred Contact Method',
     howHeard: 'How did you hear about Wisal?',
@@ -373,7 +378,7 @@ export const en = {
         subsections: [
           {
             title: 'School Information:',
-            items: ['School name and location', 'License and commercial record number', 'Account administrator data (name, email, phone)', 'Official school contact information'],
+            items: ['School name and location', 'Official registration document and operating license', 'Account administrator data (name, email, phone)', 'Official school contact information'],
           },
           {
             title: 'User Information (Parents and Students):',

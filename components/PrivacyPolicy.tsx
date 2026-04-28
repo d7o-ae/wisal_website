@@ -45,7 +45,7 @@ const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ isOpen, onClose }) => {
                 <h4 className="font-semibold text-wisal-secondary mb-2">معلومات المدرسة:</h4>
                 <ul className="list-disc list-inside space-y-1 mr-4">
                   <li>اسم المدرسة وموقعها</li>
-                  <li>رقم الترخيص والسجل التجاري</li>
+                  <li>وثيقة التسجيل الرسمية وترخيص التشغيل</li>
                   <li>بيانات المسؤول عن الحساب (الاسم، البريد الإلكتروني، رقم الجوال)</li>
                   <li>معلومات الاتصال الرسمية للمدرسة</li>
                 </ul>
