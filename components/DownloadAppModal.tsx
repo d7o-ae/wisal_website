@@ -23,6 +23,7 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onClose }) 
         <button
           onClick={onClose}
           className={`absolute top-4 ${lang === 'ar' ? 'left-4' : 'right-4'} text-gray-400 hover:text-gray-600 transition-colors`}
+          aria-label="Close dialog"
         >
           <X size={24} />
         </button>

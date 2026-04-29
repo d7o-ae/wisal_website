@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
               onClick={(e) => handleScroll(e, '#home')} 
               className="flex items-center gap-3 focus:outline-none"
             >
-              <img src="wisal_logo.png" alt={t.nav.brandName} className="h-12 w-auto object-contain" />
+              <img src="wisal_logo.png" alt={t.nav.brandName} width="150" height="48" className="h-12 w-auto object-contain" />
               <span className="text-2xl font-bold text-wisal-primary">{t.nav.brandName}</span>
             </a>
           </div>
@@ -102,6 +102,8 @@ const Navbar: React.FC = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-wisal-primary hover:text-wisal-rose focus:outline-none"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>

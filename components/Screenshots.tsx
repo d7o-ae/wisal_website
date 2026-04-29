@@ -31,6 +31,8 @@ const Screenshots: React.FC = () => {
                <img 
                  src="dashboard.png" 
                  alt={t.screenshots.dashboardAlt}
+                 width="1920"
+                 height="1080"
                  className="w-full h-full object-cover"
                />
                <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -48,6 +50,8 @@ const Screenshots: React.FC = () => {
                 <img 
                  src="mobile.png" 
                  alt={t.screenshots.mobileAlt}
+                 width="390"
+                 height="845"
                  className="w-full h-full object-cover"
                />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity">

@@ -50,7 +50,7 @@ const AboutAndFooter: React.FC = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                 <img src="logo_footer.png" alt={t.nav.brandName} className="h-16 w-auto object-contain" />
+                 <img src="logo_footer.png" alt={t.nav.brandName} width="150" height="64" className="h-16 w-auto object-contain" />
               </div>
               <p className="text-sm text-wisal-secondary/80 max-w-xs">
                 {t.footer.tagline}
