@@ -34,7 +34,7 @@ const WhyWisal: React.FC = () => {
                     🤝
                 </div>
                 <h3 className="text-xl font-bold text-wisal-primary mb-2">{t.whyWisal.partnerTitle}</h3>
-                <p className="text-wisal-muted">
+                <p className="text-wisal-secondary/80">
                     {t.whyWisal.partnerText}
                 </p>
             </div>

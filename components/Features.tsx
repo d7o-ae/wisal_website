@@ -34,7 +34,7 @@ const Features: React.FC = () => {
               <h3 className="text-lg font-bold text-wisal-primary mb-2">
                 {feature.title}
               </h3>
-              <p className="text-wisal-muted text-sm leading-relaxed">
+              <p className="text-wisal-secondary/80 text-sm leading-relaxed">
                 {feature.description}
               </p>
             </div>

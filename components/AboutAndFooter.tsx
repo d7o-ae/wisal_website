@@ -52,13 +52,13 @@ const AboutAndFooter: React.FC = () => {
               <div className="flex items-center gap-2 mb-4">
                  <img src="logo_footer.png" alt={t.nav.brandName} className="h-16 w-auto object-contain" />
               </div>
-              <p className="text-sm text-wisal-muted max-w-xs">
+              <p className="text-sm text-wisal-secondary/80 max-w-xs">
                 {t.footer.tagline}
               </p>
             </div>
             
             <div>
-              <h4 className="font-bold text-wisal-primary mb-4">{t.footer.quickLinks}</h4>
+              <h3 className="font-bold text-wisal-primary mb-4">{t.footer.quickLinks}</h3>
               <ul className="space-y-2 text-sm text-wisal-secondary">
                 <li><a href="#" onClick={scrollToTop} className="hover:text-wisal-rose transition-colors">{t.footer.home}</a></li>
                 <li><a href="#features" className="hover:text-wisal-rose transition-colors">{t.nav.features}</a></li>
@@ -67,7 +67,7 @@ const AboutAndFooter: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="font-bold text-wisal-primary mb-4">{t.footer.more}</h4>
+              <h3 className="font-bold text-wisal-primary mb-4">{t.footer.more}</h3>
               <ul className="space-y-2 text-sm text-wisal-secondary">
                 <li>
                   <button 
@@ -90,7 +90,7 @@ const AboutAndFooter: React.FC = () => {
             </div>
           </div>
           
-          <div className="mt-12 pt-8 border-t border-wisal-azure/50 text-center text-sm text-wisal-muted">
+          <div className="mt-12 pt-8 border-t border-wisal-azure/50 text-center text-sm text-wisal-secondary/70">
             <p>{t.footer.copyright.replace('{year}', String(currentYear))}</p>
           </div>
         </div>
