@@ -15,6 +15,47 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Noto+Color+Emoji&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              wisal: {
+                primary: '#212529',   // Rich Black
+                secondary: '#2E2F2F', // Jet
+                azure: '#CDDDDD',     // Primary UI/Borders
+                muted: '#ACBDBA',     // Ash Grey
+                rose: '#A599B5',      // Rose Quartz / Highlight
+                bg: '#F1F5F9',        // White Rose
+              }
+            },
+            fontFamily: {
+              sans: ['Rubik', 'sans-serif'],
+            },
+            borderRadius: {
+              'xl': '12px',
+              '2xl': '20px',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 6rem; /* Ensures sticky navbar doesn't cover section titles */
+      }
+      body {
+        background-color: #F1F5F9;
+        color: #212529;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
