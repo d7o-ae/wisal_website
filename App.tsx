@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -12,9 +12,16 @@ import FAQ from './components/FAQ';
 import CallToAction from './components/CallToAction';
 import Pricing from './components/Pricing';
 import AboutAndFooter from './components/AboutAndFooter';
+import { initGA, logPageView } from './src/utils/analytics';
 
 const AppContent: React.FC = () => {
   const { dir } = useLanguage();
+
+  useEffect(() => {
+    // Initialize Google Analytics
+    initGA();
+    logPageView(window.location.pathname + window.location.search);
+  }, []);
   return (
     <div dir={dir} className={`min-h-screen bg-wisal-bg font-sans selection:bg-wisal-rose selection:text-white ${dir === 'ltr' ? 'text-left' : 'text-right'}`}>
       <Navbar />
